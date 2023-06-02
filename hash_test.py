@@ -37,8 +37,9 @@ class HashTable:
     def print_hash(self):
         print("-------------------------")
         for key,node in self.table.items():
-            print(key)
+            print("Key: " + str(key))
             current = node
+            print("Values:", end = " ")
             while (current != None):
                 print(str(current.key), end = " ")
                 current = current.next
