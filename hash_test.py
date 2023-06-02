@@ -2,21 +2,63 @@ import numpy as np
 
 class Node:
     def __init__(self, key):
+        """
+        Constructor of the Node class.
+        Each Node object will contain the key (the sample ID) and a
+        pointer to the next node. Each distinct data point in a sample
+        will occupy its own Node object. The HashTable class links these
+        nodes with the image IDs.
+        """
         self.key = key
         self.next = None
 
 class HashTable:
     def __init__(self):
+        """
+        Constructor of the HashTable class.
+        The HashTable is based off a dictionary (self.table) that links
+        keys to values. The keys are the Image IDs, while the values are the
+        Sample IDs. 
+
+        Attributes:
+            table - The hash table linking Image IDs to Sample IDs
+            numelements - Number of elements in the hash table
+            n_buckets - Number of image IDs that the hash table contains
+        """
         self.table = {}
         self.numelements = 0
         self.n_buckets = None
 
     def init_table(self, population):
+        """
+        Populates the table by creating keys corresponding to each
+        image ID. Since no samples have been processed, each key points to
+        None.
+
+        Input:
+            population (list) - A list of image IDs
+        
+        Output:
+            None
+        """
         self.n_buckets = len(population)
         for i in population:
             self.table[i] = None
         
     def insert(self, samp_id, key, numcycles = 0):
+        """
+        Given a sample ID and an image ID (which is the hash table key), inserts
+        a Node containing the sample_id into the hash table.
+
+        Input:
+            samp_id (int) - The ID of a specific sample
+            key (int) - The image ID
+            numcycles (int) - Number of rehashes needed to ensure that the sample
+            does not contain repeat data points
+        
+        Output:
+            None
+        """
         flag = False
         current = self.table[key]
         if current == None:
@@ -38,19 +80,40 @@ class HashTable:
         self.numelements += 1
 
     def load_factor(self):
+        """
+        Computes and prints the load factor, which is the number of elements in the hash
+        divided by the number of buckets (how many images are in the population).
+
+        Input:
+            None
+        
+        Output:
+            None
+        """
         print("Load Factor: " + str(self.numelements / self.n_buckets))
 
     def print_hash(self):
+        """
+        Displays the hash table. For each bucket (image ID), shows how many sample
+        IDs are linked to that particular image ID.
+
+        Input:
+            None
+        
+        Output:
+            None
+        """
         print("-------------------------")
         for key,node in self.table.items():
-            print("Key: " + str(key))
+            print("Image ID: " + str(key))
             current = node
-            print("Values:", end = " ")
+            print("Sample IDs:", end = " ")
             while (current != None):
                 print(str(current.key), end = " ")
                 current = current.next
             print("\n-------------------------")
 
+#Testing Functionalities of HashTable class
 try:
     datasize = int(input("Dataset size:\n"))
     population = np.arange(1, datasize+1)
@@ -67,5 +130,3 @@ for samp_id in range(1,nsamples+1):
         results.insert(samp_id, i)
 results.print_hash()
 results.load_factor()
-    
-
