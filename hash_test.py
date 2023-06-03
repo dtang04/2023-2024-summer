@@ -45,7 +45,7 @@ class HashTable:
         for i in population:
             self.table[i] = None
         
-    def insert(self, samp_id, key, numcycles = 0):
+    def insert(self, samp_id, key, population, numcycles = 0):
         """
         Given a sample ID and an image ID (which is the hash table key), inserts
         a Node containing the sample_id into the hash table.
@@ -53,6 +53,7 @@ class HashTable:
         Input:
             samp_id (int) - The ID of a specific sample
             key (int) - The image ID
+            population (list) - The population of image IDs
             numcycles (int) - Number of rehashes needed to ensure that the sample
             does not contain repeat data points
         
@@ -66,7 +67,7 @@ class HashTable:
         prev = None
         while (current != None):
             if (current.key == samp_id and numcycles < 100):
-                self.insert(samp_id, np.random.choice(population), numcycles+1) #rehash if the sample already has the key value
+                self.insert(samp_id, np.random.choice(population), population, numcycles+1) #rehash if the image already contains the sample
                 return
             elif (current.key == samp_id and numcycles >= 100):
                 raise Exception("Too many rehashes.")
@@ -114,19 +115,23 @@ class HashTable:
             print("\n-------------------------")
 
 #Testing Functionalities of HashTable class
-try:
-    datasize = int(input("Dataset size:\n"))
-    population = np.arange(1, datasize+1)
-    samplesize = int(input("Sample size:\n"))
-    nsamples = int(input("Number of samples:\n"))
-except Exception:
-    print("Invalid input")
-results = HashTable()
-results.init_table(population)
-for samp_id in range(1,nsamples+1):
-    choices = np.random.choice(population, samplesize)
-    print("Selected buckets: " + str(choices))
-    for i in choices:
-        results.insert(samp_id, i)
-results.print_hash()
-results.load_factor()
+def main():
+    try:
+        datasize = int(input("Dataset size:\n"))
+        population = np.arange(1, datasize+1)
+        samplesize = int(input("Sample size:\n"))
+        nsamples = int(input("Number of samples:\n"))
+    except Exception:
+        print("Invalid input")
+    results = HashTable()
+    results.init_table(population)
+    for samp_id in range(1,nsamples+1):
+        choices = np.random.choice(population, samplesize)
+        print("Selected buckets: " + str(choices))
+        for i in choices:
+            results.insert(samp_id, i, population)
+    results.print_hash()
+    results.load_factor()
+
+if __name__ == "__main__":
+    main()
