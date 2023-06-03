@@ -122,8 +122,8 @@ class HashTable:
         Input:
             nsamps (int) - number of samples
         
-        Ouput:
-            None
+        Output:
+            output (HashTable)
         """
         samplepop = list(np.arange(1,nsamps+1))
         output = HashTable()
