@@ -159,12 +159,12 @@ class HashTable:
 
     def del_sample(self, s_id):
         """
-        Given a HashTable mapping images to samples or samples to images, deletes all nodes
-        in the HashTable that share the same value as s_id. For a HashTable
-        mapping images to samples, del_sample takes in a sample id and deletes
-        all instances of that sample in the HashTable. For a HashTable mapping samples
-        to images, del_sample takes in an image id and deletes all instances of
-        that image in the HashTable.
+        Given a HashTable mapping images to samples or samples to images (self),
+        deletes all nodes in the HashTable that share the same value as s_id.
+        For a HashTable mapping images to samples, del_sample takes in a sample id
+        and deletes all instances of that sample in the HashTable.
+        For a HashTable mapping samples to images, del_sample takes in an image id
+        and deletes all instances of that image in the HashTable.
 
         Input:
             s_id  (int) - Either the sample id for a HashTable mapping images to samples, or
