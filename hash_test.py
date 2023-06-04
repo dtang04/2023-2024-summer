@@ -139,7 +139,7 @@ class HashTable:
 
     def print_hash_inv(self):
         """
-        Given an inverted hash table, outputs sample-image pairs.
+        Given an inverted hash table, prints sample-image pairs.
 
         Input:
             None
@@ -158,6 +158,21 @@ class HashTable:
             print("\n-------------------------")
 
     def del_sample(self, s_id):
+        """
+        Given a HashTable mapping images to samples or samples to images, deletes all nodes
+        in the HashTable that share the same value as s_id. For a HashTable
+        mapping images to samples, del_sample takes in a sample id and deletes
+        all instances of that sample in the HashTable. For a HashTable mapping samples
+        to images, del_sample takes in an image id and deletes all instances of
+        that image in the HashTable.
+
+        Input:
+            s_id  (int) - Either the sample id for a HashTable mapping images to samples, or
+            the image id for a HashTable mapping samples to images.
+        
+        Output:
+            None
+        """
         for key in self.table.keys():
             current = self.table[key]
             if current == None:
@@ -198,6 +213,7 @@ def main():
     results.load_factor()
     print(results.numelements)
     invresults = results.invTable(nsamples)
+    invresults.del_sample(20)
     invresults.print_hash_inv()
     invresults.load_factor()
 if __name__ == "__main__":
