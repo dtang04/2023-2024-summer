@@ -28,6 +28,7 @@ class HashTable:
         self.table = {}
         self.numelements = 0
         self.n_buckets = None
+        self.inv = False
 
     def init_table(self, population):
         """
@@ -117,7 +118,8 @@ class HashTable:
     def invTable(self, nsamps):
         """
         Given a hash table mapping images to samples (self), reverses the table so that samples
-        map to images.
+        map to images. The inverted hash table is returned, meaning that this method does not
+        modify HashTable self (does not modify in place).
 
         Input:
             nsamps (int) - number of samples
@@ -135,6 +137,7 @@ class HashTable:
                 output.insert(img, csamp, samplepop)
                 current = current.next
         output.n_buckets = nsamps
+        output.inv = True
         return output
 
     def print_hash_inv(self):
@@ -188,6 +191,49 @@ class HashTable:
                 if (current != None):
                     prev.next = current.next
                     self.numelements -= 1
+    
+    def find_longest_chain(self):
+        """
+        Given a HashTable mapping images to samples or samples to images (self),
+        finds the longest chain of nodes that are linked to a particular key.
+
+        Input: None
+
+        Output: Tuple of size two (first element is index position, second
+        element is the number of nodes make up the longest chain)
+        """
+        maximum = 0
+        maxind = []
+        for key in self.table.keys():
+            current = self.table[key]
+            counter = 0
+            while current != None:
+                current = current.next
+                counter += 1
+            if counter > maximum:
+                maximum = counter
+                maxind = [key]
+            elif counter == maximum:
+                maxind.append(key)
+        return (maxind, maximum)
+    
+    def show_stats(self):
+        """
+        Prints stats regarding the HashTable self.
+
+        Input:
+            None
+
+        Output:
+            None
+        """
+        print("Nodes: " + str(self.numelements))
+        print("Keys: " + str(self.n_buckets))
+        print("Load Factor: ", end = "")
+        self.load_factor()
+        info = self.find_longest_chain()
+        print("Longest Chain: " + str(info[1]) + " at keys " + str(info[0]))
+        print("HashTable Inverted? " + str(self.inv))
 
 #Testing Functionalities of HashTable class
 def main():
@@ -205,16 +251,13 @@ def main():
         print("Selected buckets: " + str(choices))
         for i in choices:
             results.insert(samp_id, i, population)
-    results.print_hash()
     results.load_factor()
-    print(results.numelements)
-    results.del_sample(5)
     results.print_hash()
-    results.load_factor()
-    print(results.numelements)
-    invresults = results.invTable(nsamples)
+    results.show_stats()
+    """
     invresults.del_sample(20)
     invresults.print_hash_inv()
     invresults.load_factor()
+    """
 if __name__ == "__main__":
     main()
