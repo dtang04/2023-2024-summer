@@ -46,7 +46,7 @@ class HashTable:
         for i in population:
             self.table[i] = None
         
-    def insert(self, samp_id, key, population, weights = None, numcycles = 0):
+    def insert(self, samp_id, key, population, weights = [], numcycles = 0):
         """
         Given a sample ID and an image ID (which is the hash table key), inserts
         a Node containing the sample_id into the hash table.
