@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[31]:
-
-
 from hash_test import Node
 from hash_test import HashTable
 import pandas as pd
@@ -91,10 +85,3 @@ if choice != 'i':
     inv_hash = h.invTable(numsamp)
     inv_hash.print_hash_inv()
     h.show_stats()
-
-
-# In[ ]:
-
-
-
-
