@@ -232,7 +232,6 @@ class HashTable:
         """
         print("Nodes: " + str(self.numelements))
         print("Keys: " + str(self.n_buckets))
-        print("Load Factor: ", end = "")
         self.load_factor()
         info = self.find_longest_chain()
         print("Longest Chain: " + str(info[1]) + " at keys " + str(info[0]))
