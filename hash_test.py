@@ -116,6 +116,7 @@ class HashTable:
             while (current != None):
                 print(str(current.key), end = " ")
                 current = current.next
+            print("\nNode count: " + str(self.calc_listlen(key)), end = "")
             print("\n-------------------------")
 
     def invTable(self, nsamps):
@@ -256,7 +257,7 @@ class HashTable:
         """
         inv_table = None
         if self.inv == False:
-            inv_table = self.invTable()
+            inv_table = self.invTable(self.numelements)
         else:
             inv_table = self
         agglst = []
@@ -278,6 +279,74 @@ class HashTable:
         for val in dupls.values():
             global_count += val
         return (global_count, dupls)
+
+    def move_node(self, src_img, dest_img, sample_id):
+        current = self.table[src_img]
+        rev_node = None
+        if current == None:
+            raise Exception("No samples have chosen this image.")
+        if current.next == None and sample_id == current.key:
+            rev_node = Node(current.key)
+            self.table[src_img] = None
+        elif current.next == None and sample_id != current.key:
+            raise Exception("The sample requested does not appear in the image.")
+        else:
+            prev = None
+            while current != None:
+                if sample_id == current.key:
+                    rev_node = Node(current.key)
+                    prev.next = current.next
+                    break
+                else:
+                    prev = current
+                    current = current.next
+            if current == None:
+                raise Exception("The sample requested does not appear in the image.")
+        current = self.table[dest_img]
+        if current == None:
+            self.table[dest_img] = rev_node
+        else:
+            while current.next != None:
+                current = current.next
+            current.next = rev_node
+    
+    def calc_listlen(self, img_id):
+        count = 0
+        current = self.table[img_id]
+        while current != None:
+            count += 1
+            current = current.next
+        return count
+
+    def calc_avg_dupls(self):
+        info = self.count_repeats()
+        count = 0
+        for i in info[1].values():
+            count += i
+        try:
+            return count / len(info[1])
+        except ZeroDivisionError:
+            raise Exception("No duplicate entries in hash table.")
+
+    def balance_leaves(self):
+        dupls = self.count_repeats()
+        avg = self.calc_avg_dupls()
+        src_lst = []
+        dest_lst = []
+        for img_id in self.table.keys():
+            if self.calc_listlen(img_id) <= avg - 1:
+                dest_lst.append(img_id)
+        for img_id, num_dupl in dupls[1].items():
+            if self.calc_listlen(img_id) >= avg + 1:
+                src_lst.append(img_id)
+        for i,img_id in enumerate(src_lst):
+            if i > len(dest_lst) - 1:
+                return
+            else:
+                current = self.table[src_lst[i]]
+                while current.next != None:
+                    current = current.next
+                self.move_node(src_lst[i], dest_lst[i], current.key)
 
 #Testing Functionalities of HashTable class
 def main():
@@ -314,14 +383,14 @@ def main():
                 results.insert(samp_id, i, population, weights)
             else:
                 results.insert(samp_id, i, population)
-    results.load_factor()
-    #results.print_hash()
-    results.show_stats()
-    invresults = results.invTable(nsamples)
+    #results.load_factor()
+    results.print_hash()
+    #invresults = results.invTable(nsamples)
     #invresults.del_sample(20)
-    invresults.print_hash_inv()
+    #invresults.print_hash_inv()
     #invresults.load_factor()
-    print(invresults.count_repeats())
+    results.balance_leaves()
+    results.print_hash()
 
 if __name__ == "__main__":
     main()
