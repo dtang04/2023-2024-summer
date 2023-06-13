@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[6]:
-
-
 from hash_test import Node
 from hash_test import HashTable
 import pandas as pd
@@ -79,21 +73,9 @@ for samp_id in range(1,numsamps+1):
 inv_hash = h.invTable(numsamps)
 inv_hash.print_hash_inv()
 h.show_stats()
-
-
-# In[9]:
-
-
 #Verifying HashTable Results
 lst = input("Enter image IDs separated by a space: ").split(" ")
 for i,val in enumerate(lst):
     lst[i] = int(val)
 for i in lst:
     print(df.loc[df["submitter_id"] == i]["sex"])
-
-
-# In[ ]:
-
-
-
-
