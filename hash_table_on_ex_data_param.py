@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[63]:
-
-
 from hash_test import Node
 from hash_test import HashTable
 import pandas as pd
@@ -79,11 +73,6 @@ for samp_id in range(1,numsamps+1):
 inv_hash = h.invTable(numsamps)
 inv_hash.print_hash_inv()
 h.show_stats()
-
-
-# In[67]:
-
-
 #Calculating Load Factor Subsets - Run this after the running first cell
 cat_1 = input("Enter the first variable that will be considered in load factor calculations. ")
 cat_2 = input("Enter the second variable that will be considered in load factor calculations. ")
@@ -132,15 +121,9 @@ for cat_1 in load_dict:
     for cat_2 in load_dict[cat_1]:
         load_dict[cat_1][cat_2].append(load_dict[cat_1][cat_2][1]/load_dict[cat_1][cat_2][0])
 print(load_dict)      
-
-
-# In[20]:
-
-
 #Verifying HashTable Results
 lst = input("Enter image IDs separated by a space: ").split(" ")
 for i,val in enumerate(lst):
     lst[i] = int(val)
 for i in lst:
     print(df.loc[df["submitter_id"] == i]["sex"])
-
