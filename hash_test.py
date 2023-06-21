@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.stats as st
 
 class Node:
     def __init__(self, key):
@@ -322,6 +323,14 @@ class HashTable:
             current.next = rev_node
     
     def calc_listlen(self, img_id):
+        """
+        Determines the number of samp,les that have drawn a particular image.
+
+        Input:
+            img_id - int
+        
+        Output: count - int
+        """
         count = 0
         current = self.table[img_id]
         while current != None:
@@ -378,6 +387,62 @@ class HashTable:
                         current = current.next
                     self.move_node(src_lst[i], dest_lst[i], current.key)
 
+    def img_load_dict(self):
+        """
+        Returns a dictionary with image ids as keys and the number of draws that
+        have selected said image ids as values.
+
+        Input:
+            None
+        
+        Output: res - dict
+        """
+        res = {}
+        for img in self.table:
+            res[img] = self.calc_listlen(img)
+        return res
+    
+    def img_load_stats(self):
+        """
+        Returns a dictionary with statistics about the hash table.
+
+        Input: None
+
+        Output: stat_res - dict
+        """
+        load_dict = self.img_load_dict()
+        arr = []
+        stat_res = {}
+        for val in load_dict.values():
+            arr.append(val)
+        stat_res["Median"] = np.median(arr)
+        stat_res["Mean"] = np.mean(arr)
+        stat_res["Stdev"] = np.std(arr)
+        stat_res["IQR"] = st.iqr(arr)
+        stat_res["Lower Quartile"] = np.percentile(arr, 25)
+        stat_res["Upper Quartile"] = np.percentile(arr, 75)
+        stat_res["Max"] = max(arr)
+        stat_res["Min"] = min(arr)
+        return stat_res
+
+    def find_outliers(self):
+        """
+        Uses the 1.5*IQR rule to find image ids that are outliers in terms
+        of how many draws have chosen that particular image.
+
+        Input: None
+
+        Output: img_lst - list
+        """
+        img_lst = []
+        nums = self.img_load_dict()
+        stat_res = self.img_load_stats()
+        for img_id,val in nums.items():
+            if (val < stat_res["Lower Quartile"] - 1.5 * stat_res["IQR"] or
+                val > stat_res["Upper Quartile"] + 1.5 * stat_res["IQR"]):
+                img_lst.append(img_id)
+        return img_lst
+
 #Testing Functionalities of HashTable class
 def main():
     try:
@@ -414,13 +479,18 @@ def main():
             else:
                 results.insert(samp_id, i, population)
     #results.load_factor()
-    results.print_hash()
-    #invresults = results.invTable(nsamples)
+    #results.print_hash()
+    invresults = results.invTable(nsamples)
+    print(invresults.img_load_dict())
+    print(invresults.img_load_stats())
+    print(invresults.find_outliers())
     #invresults.del_sample(20)
     #invresults.print_hash_inv()
     #invresults.load_factor()
-    results.balance_leaves(100)
-    results.print_hash()
+    #results.balance_leaves(100)
+    #results.print_hash()
+    #invresults = results.invTable(nsamples)
+    #invresults.print_hash_inv()
 
 if __name__ == "__main__":
     main()
